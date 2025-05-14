@@ -98,4 +98,7 @@ where date = (select date from premier_jour);
 with max_price as (
     select price from products order by price desc limit 1
 )
-select name , price from products where price = (select price from max_price);
+select name , price 
+from products 
+where price = (select price from max_price)
+order by name;
