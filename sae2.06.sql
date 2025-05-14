@@ -134,3 +134,12 @@ SELECT
 FROM orders
 GROUP BY date
 ORDER BY date ASC;
+
+--cumuls2
+SELECT
+    TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS month,
+    SUM(subtotal) AS revenue,
+    SUM(SUM(subtotal)) OVER (ORDER BY DATE_TRUNC('month', date)) AS cumulative_revenue
+FROM orders 
+GROUP BY DATE_TRUNC('month', date)
+ORDER BY DATE_TRUNC('month', date) ASC;
