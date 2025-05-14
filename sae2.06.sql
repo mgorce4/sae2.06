@@ -37,7 +37,7 @@ ORDER BY o.order_id;
 with avgRating as(
     select AVG(rating) as rating from products
 )
-select o.order_id , o.date, p.name, p.category, o.subtotal, p.rating
+select DISTINCT ON (p.name) o.order_id , o.date, p.name, p.category, o.subtotal, p.rating
 from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id  
 where rating<= (select rating from avgRating)
-order by order_id
+order by p.name,order_id
