@@ -125,3 +125,12 @@ SELECT
 FROM orders o join clients c on o.client_id = c.client_id
 GROUP BY name, month
 ORDER BY name asc, month ASC;
+
+--cumuls1
+SELECT 
+    date,
+    SUM(subtotal) AS revenue,
+    SUM(SUM(subtotal)) OVER (ORDER BY date) AS cumulative_revenue
+FROM orders
+GROUP BY date
+ORDER BY date ASC;
