@@ -25,9 +25,19 @@ SELECT
     o.subtotal,
     CASE 
         WHEN o.subtotal >= (SELECT average FROM avgTotal) THEN 'Bonne'
-        ELSE 'Mauvais'
+        ELSE 'Mauvaise'
     END AS case
 FROM orders o
 JOIN products p ON o.product_id = p.product_id
 JOIN clients c ON o.client_id = c.client_id
 ORDER BY o.order_id;
+
+--infra
+
+with avgRating as(
+    select AVG(rating) as rating from products
+)
+select o.order_id , o.date, p.name, p.category, o.subtotal, p.rating
+from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id  
+where rating<= (select rating from avgRating)
+order by order_id
