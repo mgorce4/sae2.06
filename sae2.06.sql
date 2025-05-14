@@ -116,3 +116,12 @@ SELECT
 FROM orders
 GROUP BY month
 ORDER BY month ASC;
+
+--chiffre3
+SELECT
+    name,
+    TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS month,
+    SUM(subtotal) AS subtotal
+FROM orders o join clients c on o.client_id = c.client_id
+GROUP BY name, month
+ORDER BY name asc, month ASC;
