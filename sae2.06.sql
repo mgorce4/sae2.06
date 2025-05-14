@@ -108,3 +108,11 @@ select c.name, o.date , sum(subtotal) as subtotal
 from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id
 group by c.name , o.date
 order by c.name, o.date
+
+--chiffre2
+SELECT 
+    TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS month,
+    SUM(subtotal) AS subtotal
+FROM orders
+GROUP BY month
+ORDER BY month ASC;
