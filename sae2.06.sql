@@ -102,3 +102,9 @@ select name , price
 from products 
 where price = (select price from max_price)
 order by name;
+
+--chiffre1
+select c.name, o.date , sum(subtotal) as subtotal 
+from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id
+group by c.name , o.date
+order by c.name, o.date
