@@ -85,13 +85,17 @@ with avgRating as(
 select DISTINCT ON (p.name) o.order_id , o.date, p.name, p.category, o.subtotal, p.rating
 from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id  
 where rating<= (select rating from avgRating)
-order by p.name,order_id
+order by p.name,order_id;
 
 --premier_jour
 with premier_jour as(
     select date from orders order by date asc LIMIT 1
 )
 select sum(subtotal) as subtotal from orders 
-where date = (select date from premier_jour)
+where date = (select date from premier_jour);
 
---
+--chers
+with max_price as (
+    select price from products order by price desc limit 1
+)
+select name , price from products where price = (select price from max_price);
