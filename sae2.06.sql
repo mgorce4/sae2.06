@@ -169,3 +169,21 @@ JOIN categories c ON TRUE
 LEFT JOIN ventes v ON v.month = m.month AND v.category = c.category
 ORDER BY m.month ASC, c.category ASC;
 
+--ventes1
+with ventes_dates as (
+    SELECT DISTINCT date::date from orders
+),
+numerotées as (
+    select 
+    date,
+    date - interval '1 day' * row_number() over (order by date) as groupe
+    from ventes_dates
+),
+groupées as (
+    select 
+        min(date) as beginning,
+        max(date) as ending
+    from numerotées
+    group by groupe
+)
+select * from groupées order by beginning;
