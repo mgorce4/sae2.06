@@ -218,3 +218,12 @@ ventes2 AS (
 SELECT * FROM ventes2
 ORDER BY beginning;
 
+--jour
+SELECT 
+    date,
+    SUM(subtotal) AS revenue,
+    SUM(SUM(subtotal)) OVER (ORDER BY date) AS cumulative_revenue
+FROM orders
+where date BETWEEN '2021-12-28' and '2022-01-03'
+GROUP BY date
+ORDER BY date ASC;
