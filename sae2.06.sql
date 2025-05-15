@@ -47,7 +47,7 @@ VALUES (47, 'Tux'),
 select ROUND(AVG(subtotal),2) as average from orders;
 
 --moyenne2
-select category, ROUND(AVG(subtotal),2) as average 
+select category, ROUND(AVG(subtotal),2) as average
 from orders o join products p on o.product_id=p.product_id join clients c on o.client_id = c.client_id
 GROUP BY category
 ORDER BY average desc, category asc;
@@ -187,3 +187,34 @@ groupées as (
     group by groupe
 )
 select * from groupées order by beginning;
+
+--ventes2
+WITH ventes_dates AS (
+    SELECT DISTINCT date::date FROM orders
+),
+numerotées AS (
+    SELECT 
+        date,
+        date - INTERVAL '1 day' * ROW_NUMBER() OVER (ORDER BY date) AS groupe
+    FROM ventes_dates
+),
+périodes AS (
+    SELECT 
+        MIN(date) AS beginning,
+        MAX(date) AS ending,
+        groupe
+    FROM numerotées
+    GROUP BY groupe
+),
+ventes2 AS (
+    SELECT 
+        p.beginning,
+        p.ending,
+        SUM(o.subtotal) AS revenue
+    FROM périodes p
+    JOIN orders o ON o.date BETWEEN p.beginning AND p.ending
+    GROUP BY p.beginning, p.ending
+)
+SELECT * FROM ventes2
+ORDER BY beginning;
+
