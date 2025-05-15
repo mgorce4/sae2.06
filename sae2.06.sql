@@ -143,3 +143,29 @@ SELECT
 FROM orders 
 GROUP BY DATE_TRUNC('month', date)
 ORDER BY DATE_TRUNC('month', date) ASC;
+
+--chiffre4
+WITH mois AS (
+    SELECT DISTINCT DATE_TRUNC('month', date) AS month FROM orders
+),
+categories AS (
+    SELECT DISTINCT category FROM products
+),
+ventes AS (
+    SELECT 
+        DATE_TRUNC('month', o.date) AS month,
+        p.category,
+        SUM(o.subtotal) AS subtotal
+    FROM orders o
+    JOIN products p ON o.product_id = p.product_id
+    GROUP BY DATE_TRUNC('month', o.date), p.category
+)
+SELECT 
+    TO_CHAR(m.month, 'YYYY-MM') AS month,
+    c.category,
+    COALESCE(v.subtotal, 0) AS subtotal
+FROM mois m
+JOIN categories c ON TRUE
+LEFT JOIN ventes v ON v.month = m.month AND v.category = c.category
+ORDER BY m.month ASC, c.category ASC;
+
